@@ -1,2 +1,51 @@
-h1= title
-p Welcome to #{title}
+!!! 5
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport")
+		title= "title"
+		style(href="style.css")
+	body
+		div#wrapper
+			h1 loungebylounge
+			div#sub_headline
+				h3 
+					em - Welcome to loungebylounge.
+					span People online (1)
+			canvas#canvas
+		script(src="/javascripts/json.js")
+		script(src="/socket.io/socket.io.js")
+		script(src="/javascripts/jquery.js")
+		script(src="/javascripts/client.js")		
+		
+
+<!--<div id="controls">
+<label for="color">Color:</label>
+<select id="color">
+<option>Blue</option>
+<option>Red</option>
+<option>Yellow</option>
+<option>Magenta</option>
+<option>Green</option>
+<option>Cyan</option>
+<option>Orange</option>
+<option>White</option>
+</select>
+<label for="size">Size:</label>
+<select id="size">
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+<option>15</option>
+<option>20</option>
+<option>25</option>
+</select>
+<button id="clear">Clear All</button>
+</div> -->
