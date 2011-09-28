@@ -1,15 +1,14 @@
 
-/**
- * Module dependencies.
- */
+// Module dependencies.
 
 var express = require('express')
     , app = express.createServer()
 	, io = require('socket.io')
-	, port = process.argv[2] || 80
+	, port = process.argv[2] || 1337
 	, buffer = []
 	, count = 0
 	, socket
+
 
 // Configuration
 
@@ -30,12 +29,19 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+
 // Routes
 
 app.get('/', function(req, res){
   res.render('index', {
-    title: 'Express'
+    title: 'loungebyloungé'
   });
+});
+
+app.use(function(req, res){
+	res.render('404', {
+    	title: '404'
+    });
 });
 
 app.listen(port);
@@ -50,41 +56,21 @@ socket.sockets.on('connection', function(client) {
 	
 	count++;
 	
-	client.emit('count', {count:count, session_id: client.sessionId})
-	client.broadcast.emit('count', {count:count, session_id: client.sessionId})
+	client.emit('count', { 'count': count })
+	client.broadcast.emit('count', { 'count': count })
 			
-	// message
-	client.on('message', function(circle) {
-		
-		var msg = {
-			circle: circle,
-			session_id: client.sessionId
-		}
+	client.on('draw', function(data) {
 
-		buffer.push(msg)
-
+		buffer.push(data.circle)
 		if (buffer.length > 1024) buffer.shift();
-
-//		if (circle.clear) {
-//			msg.clear = true;
-//			msg.reset = true;
-//			buffer = [];
-//			delete msg.circle;
-//		}
-//
-//		if (circle.reset) {
-//			msg.reset = true;
-//			delete msg.circle;
-//		}
-
-		client.emit('msg', msg);
+		
+		client.broadcast.emit('msg', { 'circle': data.circle });
 
 	});
 	
 	client.on('disconnect', function(){
 		count--;
-        client.emit('count', {count: count, session_id: client.sessionId});
-        client.broadcast.emit('count', {count:count, session_id: client.sessionId})
+        client.broadcast.emit('count', { 'count': count })
     });
     
 });
