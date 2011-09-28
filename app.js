@@ -39,7 +39,7 @@ app.get('/', function(req, res){
 });
 
 app.use(function(req, res){
-	res.render('404', {
+	res.render(__dirname + '/views/errors/404', {
     	title: '404'
     });
 });
