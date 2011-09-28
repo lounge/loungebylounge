@@ -2,7 +2,7 @@ var tool, context, canvas, socket;
 
 $(document).ready(function() {
 	
-	socket = io.connect("http://localhost:1337");	
+	socket = io.connect();	
 	
 	socket.on('msg', function(data) {
 		drawCircle(data.circle);
