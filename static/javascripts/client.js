@@ -5,7 +5,7 @@ $(document).ready(function() {
 	socket = io.connect();	
 	
 	socket.on('msg', function(data) {
-		drawCircle(data.circle);
+		draw_circle(data.circle);
 	});
 	
 	socket.on('count', function(data) {
