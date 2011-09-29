@@ -33,14 +33,16 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-  res.render('index', {
-    title: 'loungebyloungé'
-  });
+	res.render('index', {
+    	title: 'loungebyloungé',
+    	layout: 'layouts/main_layout'
+  	});
 });
 
 app.use(function(req, res){
-	res.render(__dirname + '/views/errors/404', {
-    	title: '404'
+	res.render('errors/404', {
+    	title: '404',
+    	layout: 'layouts/main_layout'
     });
 });
 
@@ -50,7 +52,7 @@ console.log("Express server listening on port %d in %s mode", app.address().port
 
 // socket.io
 
-socket = io.listen(app)
+socket = io.listen(app);
 
 socket.sockets.on('connection', function(client) {
 	

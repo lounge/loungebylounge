@@ -36,31 +36,6 @@ ul {
     padding: 0;
 }
 
-ul li {
-    list-style: none outside none;
-    margin: 5px 0;
-    padding: 3px 8px;
-}
-
-ul li:hover {
-    color: #2E2E2E;
-    cursor: pointer;
-}
-
-ul li .path {
-    font-weight: bold;
-    padding-left: 5px;
-}
-
-ul li .line {
-    font-style: italic;
-    padding-right: 5px;
-}
-
-ul li:first-child .path {
-    padding-left: 0;
-}
-
 p {
     line-height: 1.5;
 }
@@ -86,19 +61,32 @@ canvas {
     min-height: 400px;
 }
 
-div#sub_headline {
+#wrapper h1.logo {
+	letter-spacing: -6px;
+}
+
+#sub-headline {
 	border-bottom: 1px solid #EEEEEE;
 	height: 30px;
     margin-bottom: 20px;
 }
 
-div#sub_headline h3 {
-	float: left;
-}
 
-div#sub_headline h3 span {
+#sub-headline h3 span {
 	display: inline;
     font-size: 14px;
     font-weight: normal;
     margin-left: 20px;
+}
+
+#sub-headline ul#controls {
+	float: right;
+	clear: both;
+}
+
+#sub-headline ul#controls li {
+	list-style: none;
+	list-style-type: none;
+	float: left;
+	margin-left: 15px;
 }

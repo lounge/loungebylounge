@@ -1,8 +1,8 @@
-var tool, context, canvas, socket;
+var tool, color, context, canvas, socket;
 
 $(document).ready(function() {
 	
-	socket = io.connect();	
+	socket = io.connect("http://127.0.0.1:443");	
 	
 	socket.on('msg', function(data) {
 		drawCircle(data.circle);
@@ -14,7 +14,6 @@ $(document).ready(function() {
 	
 	
 	canvas = $('#canvas');
-	
 	context = canvas[0].getContext('2d');
 	
   	tool = new tool_pencil();
@@ -22,6 +21,12 @@ $(document).ready(function() {
   	canvas.bind('mousedown', ev_canvas, false);
   	canvas.bind('mousemove', ev_canvas, false); 
   	canvas.bind('mouseup',   ev_canvas, false);
+  	
+  	$('#clear').bind('click', clear_canvas);
+  	
+  	$('#color').bind('click', function() {
+  		color = randomize_color();
+  	})
 
 
 
@@ -29,9 +34,7 @@ function tool_pencil () {
 	var tool = this;
 	this.started = false;
 	
-	var r = Math.round(Math.random() * 255);
-	var g = Math.round(Math.random() * 255);
-	var b = Math.round(Math.random() * 255);
+	color = randomize_color();
 
  	this.mousedown = function (ev) {
 		context.beginPath();
@@ -45,11 +48,11 @@ function tool_pencil () {
       		circle = {
 				x: ev._x,
 				y: ev._y,
-				color: 'rgb(' + r + ',' + g + ',' + b + ')',
+				color: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')',
 				size: 4	
-			}
+			};
 		
-			drawCircle(circle);
+			draw_circle(circle);
 			socket.emit('draw', { 'circle': circle });
     	}
     };
@@ -75,11 +78,29 @@ function ev_canvas (ev) {
     } 
 }
 
-function drawCircle(circle) {
+function draw_circle(circle) {
 	context.lineTo(circle.x, circle.y);
 	context.strokeStyle = circle.color;
 	context.lineWidth = circle.size;
 	context.stroke();	
+}
+
+function clear_canvas() {
+	context.save();
+	context.setTransform(1, 0, 0, 1, 0, 0);
+	context.clearRect(0, 0, canvas.width(), canvas.height());
+	context.restore();
+}
+
+function randomize_color() {
+	
+	color = {
+		r: Math.round(Math.random() * 255),
+		g: Math.round(Math.random() * 255),
+		b: Math.round(Math.random() * 255)
+	};
+	
+	return color;
 }
 	
 });

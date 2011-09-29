@@ -1,20 +1,16 @@
-!!! 5
-html(lang="en")
-	head
-		meta(charset="UTF-8")
-		meta(name="viewport")
-		title= "title"
-		style(href="/stylesheets/style.css")
-	body
-		div#wrapper
-			h1 loungebyloungé
-			div#sub_headline
-				h3 
-					em - Welcome to loungebylounge.com
-					span People online (1)
-			canvas#canvas(width="960px", height="400px")
-		script(src="/javascripts/json.js")
-		script(src="/socket.io/socket.io.js")
-		script(src="/javascripts/jquery.js")
-		script(src="/javascripts/client.js")		
+div#wrapper
+	h1.logo loungebyloungé
+	div#sub-headline
+		h3 
+			em - Welcome to loungebylounge.com
+			span People online (1)
+			
+			ul#controls
+				li#clear 
+					a(href="#") clear
+				li#color 
+					a(href="#") color
+				
+	canvas#canvas(width="960px", height="400px")
+			
 		
