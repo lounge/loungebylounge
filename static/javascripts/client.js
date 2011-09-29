@@ -9,7 +9,7 @@ $(document).ready(function() {
 	});
 	
 	socket.on('count', function(data) {
-		$("div#sub_headline h3 span").html('People online (' + data.count + ')');
+		$("div#sub-headline h3 span").html('People online (' + data.count + ')');
 	});
 	
 	
