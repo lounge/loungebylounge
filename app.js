@@ -6,7 +6,7 @@ var express = require('express')
 	, io = require('socket.io')
 	, port = process.argv[2] || 80
 	, buffer = []
-	, count = 0
+	, count = -1
 	, socket
 
 
@@ -56,23 +56,40 @@ socket = io.listen(app);
 
 socket.sockets.on('connection', function(client) {
 	
+	client.emit('join', { 'clientId': client.id });	
+	
 	count++;
 	
-	client.emit('count', { 'count': count })
-	client.broadcast.emit('count', { 'count': count })
+	if (count > 0) {
+		client.emit('updateClients', { 'clients': count });
+		client.broadcast.emit('updateClients', { 'clients': count });
+	}
+	
+	client.on('drawStart', function(data) {
+		console.log('tool', data.tool);
+		console.log('tool', data.tool.started);
+		console.log('tool', data.tool.draw);
+		client.broadcast.emit('drawStart', data );
+	});
 			
 	client.on('draw', function(data) {
 
-		buffer.push(data.circle)
+		buffer.push(data.point)
 		if (buffer.length > 1024) buffer.shift();
 		
-		client.broadcast.emit('msg', { 'circle': data.circle });
+		client.broadcast.emit('draw', data);
+		
+		console.log(client.id);
 
 	});
 	
+	client.on('drawEnd', function(data) {
+		client.broadcast.emit('drawEnd', data);
+	})
+	
 	client.on('disconnect', function(){
 		count--;
-        client.broadcast.emit('count', { 'count': count })
+        client.broadcast.emit('updateClients', { 'clients': count });
     });
     
 });

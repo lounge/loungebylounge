@@ -49,9 +49,9 @@ a:hover {
     color: #303030;
 }
 
-canvas {
+canvas#main-canvas {
 	background: none repeat scroll 0 0 #FFFFFF;
-	cursor: pointer;
+	cursor: crosshair;
 	border: 1px solid #EEEEEE;
 }
 
@@ -79,14 +79,141 @@ canvas {
     margin-left: 20px;
 }
 
-#sub-headline ul#controls {
+ul#controls {
 	float: right;
 	clear: both;
 }
 
-#sub-headline ul#controls li {
+ul#controls li {
 	list-style: none;
 	list-style-type: none;
 	float: left;
-	margin-left: 15px;
+	margin-left: 10px;
+	padding: 9px;
+	margin-top: -9px;
 }
+
+ul#controls li.active {
+	background-color: #FFFFFF;
+    border: 1px solid #EEEEEE;
+    color: #555555;
+    display: inline-block;
+    text-decoration: none;
+    padding: 8px;
+	margin-top: -9px;
+}
+
+ul#controls li#color.active {
+    margin-right: -164px;
+    padding: 8px 172px 8px 8px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+ul#controls li#color #colorHolder {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #ECE9E9;
+    border-left: 1px solid #ECE9E9;
+    border-right: 1px solid #ECE9E9;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    display: none;
+    height: 200px;
+    position: absolute;
+    right: -1px;
+    top: 38px;
+    width: 140px;
+}
+
+ul#controls li#color.active #colorHolder {
+    display: block;
+}
+
+ul#controls li#color.active #colorHolder #preview {
+    border: 1px solid #ECE9E9;
+    height: 20px;
+    margin: 0 auto;
+    width: 100px;
+    margin-bottom: 7px;
+}
+
+ul#controls li#color.active #colorHolder #foreground {
+    border: 1px solid #ECE9E9;
+    display: inline-block;
+    height: 20px;
+    margin-left: 30px;
+    width: 30px;
+}
+
+ul#controls li#color.active #colorHolder #background {
+    border: 1px solid #ECE9E9;
+    display: inline-block;
+    height: 20px;
+    margin-left: 16px;
+    width: 30px;
+}
+
+ul#controls li#tools.active {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+ul#controls li#tools #toolsHolder {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #ECE9E9;
+    border-left: 1px solid #ECE9E9;
+    border-right: 1px solid #ECE9E9;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    display: none;
+    height: 100px;
+    position: absolute;
+    right: -1px;
+    top: 38px;
+    width: 59px;
+}
+
+ul#controls li#tools.active #toolsHolder {
+    display: block;
+}
+
+ul#controls li#tools.active #toolsHolder ul {
+
+}
+
+
+ul#controls li#tools.active #toolsHolder ul li {
+    background-position: center center;
+    background-repeat: no-repeat;
+    float: none;
+    height: 32px;
+    margin: 11px 0 0;
+    padding: 0 0 0 10px;
+}
+
+ul#controls li#tools.active #toolsHolder ul li:hover {
+    cursor: pointer;
+}
+
+ul#controls li#tools.active #toolsHolder ul li#pencil {
+    background-image: url("/images/pen.png");
+}
+
+ul#controls li#tools.active #toolsHolder ul li#brush {
+    background-image: url("/images/brush.png");
+}
+
+
+
+
+
+
+
+
+

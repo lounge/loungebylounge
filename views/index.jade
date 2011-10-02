@@ -3,14 +3,25 @@ div#wrapper
 	div#sub-headline
 		h3 
 			em - Welcome to loungebylounge.com
-			span People online (1)
+			span too many lulz, nobody is here.
 			
 			ul#controls
 				li#clear 
 					a(href="#") clear
+				li#tools 
+					a(href="#") tools
+					div#toolsHolder
+						ul
+							li#brush
+							li#pencil
 				li#color 
 					a(href="#") color
+					div#colorHolder
+						canvas#colorPicker(width="135px", height="135px")
+						div#preview
+						div#foreground
+						div#background
 				
-	canvas#canvas(width="960px", height="400px")
+	canvas#main-canvas(width="960px", height="400px")
 			
 		
