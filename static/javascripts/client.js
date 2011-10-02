@@ -15,7 +15,7 @@ var CONFIG = {
 $(document).ready(function() {
 	
 function init() {
-	socket = io.connect("http://127.0.0.1:1337");	
+	socket = io.connect();	
 	
 	socket.on('join', function(data) {	
 		CONFIG.clientId = data.clientId;
