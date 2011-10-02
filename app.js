@@ -4,7 +4,7 @@
 var express = require('express')
     , app = express.createServer()
 	, io = require('socket.io')
-	, port = process.argv[2] || 80
+	, port = process.argv[2] || 1337
 	, buffer = []
 	, count = -1
 	, socket

@@ -1,5 +1,7 @@
 var ctx, mainCanvas, socket, client, activeTool;
 
+var store = window.localStorage;
+
 
 
 var CONFIG = {
@@ -13,7 +15,13 @@ var CONFIG = {
 $(document).ready(function() {
 	
 function init() {
-	socket = io.connect();	
+	socket = io.connect("http://127.0.0.1:1337");	
+	
+	socket.on('join', function(data) {	
+		CONFIG.clientId = data.clientId;
+		loadFromLocalStorage()
+	});
+	
 	
 	var t;
 	
@@ -30,9 +38,7 @@ function init() {
 		t.drawEnd();
 	});
 	
-	socket.on('join', function(data) {	
-		CONFIG.clientId = data.clientId;
-	});
+	
 	
 	socket.on('updateClients', function(data) {
 		$("div#sub-headline h3 span").html('People online (' + data.clients + ')');
@@ -130,6 +136,7 @@ tools.brush = function() {
 		if (tool.started) {
       		ctx.closePath();
       		tool.started = false;
+      		saveToLocalStorage();
     	}
 	}
 };
@@ -205,6 +212,7 @@ tools.pencil = function() {
 		if (tool.started) {
       		ctx.closePath();
       		tool.started = false;
+      		saveToLocalStorage();
     	}
 	}
 };
@@ -230,6 +238,7 @@ function clearCanvas() {
 	ctx.setTransform(1, 0, 0, 1, 0, 0);
 	ctx.clearRect(0, 0, mainCanvas.width(), mainCanvas.height());
 	ctx.restore();
+	saveToLocalStorage();
 }
 
 function randomizeColor() {
@@ -274,6 +283,7 @@ function loadColorPicker() {
 		   	 CONFIG.color.background = 'rgb(' + data[0] + ',' + data[1] +',' + data[2] + ')';
 		     $('#background').css('backgroundColor', CONFIG.color.background);
 		     mainCanvas.css('backgroundColor', CONFIG.color.background);
+		     saveToLocalStorage();
 		}
 
 	});
@@ -290,6 +300,7 @@ function loadColorPicker() {
 		    	CONFIG.color.background = 'rgb(' + data[0] + ',' + data[1] +',' + data[2] + ')';
 		    	$('#background').css('backgroundColor', CONFIG.color.background);
 		    	mainCanvas.css('backgroundColor', CONFIG.color.background);
+		    	saveToLocalStorage();
 		    }
 	    					
     	}
@@ -310,6 +321,20 @@ function loadColorPicker() {
 		foreground = false;
 		$('#preview').css('backgroundColor', $(this).css('backgroundColor'));
 	});
+}
+
+function saveToLocalStorage() {
+	if (window['localStorage'] !== null) {
+    	localStorage['canvas'] = document.getElementById('main-canvas').toDataURL('image/png');
+    }
+}
+
+function loadFromLocalStorage() {	
+	if (window['localStorage'] !== null && localStorage['canvas']) {
+    	localStorageImage = new Image();
+        localStorageImage.src = localStorage['canvas'];
+        ctx.drawImage(localStorageImage, 0, 0);
+   }
 }
 	
   init();
