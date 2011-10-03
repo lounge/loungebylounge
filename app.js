@@ -10,7 +10,7 @@ var CONFIG = {
 var express = require('express')
     , app = express.createServer()
 	, nowjs = require("now")
-	, port = process.argv[2] || 1337
+	, port = process.argv[2] || 80
 	, buffer = []
 	, count = -1
 
