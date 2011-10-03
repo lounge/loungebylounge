@@ -61,8 +61,21 @@ canvas#main-canvas {
     min-height: 400px;
 }
 
-#wrapper h1.logo {
+#wrapper h1#logo {
+	display: inline;
 	letter-spacing: -6px;
+}
+
+#wrapper h2#currentStatus {
+	background: none repeat scroll 0 0 #343434;
+    clear: both;
+    color: #FFFFFF;
+    display: none;
+    float: right;
+    font-style: italic;
+    margin-left: 15px;
+    margin-top: 25px;
+    padding: 5px;
 }
 
 #sub-headline {
@@ -77,6 +90,13 @@ canvas#main-canvas {
     font-size: 14px;
     font-weight: normal;
     margin-left: 20px;
+}
+
+#sub-headline h3 span#gameState {
+	background-color: #343434;
+    color: #FFFFFF;
+    padding: 3px;
+    display: none;
 }
 
 ul#controls {
@@ -207,6 +227,15 @@ ul#controls li#tools.active #toolsHolder ul li#pencil {
 
 ul#controls li#tools.active #toolsHolder ul li#brush {
     background-image: url("/images/brush.png");
+}
+
+ul#controls li#play a {
+	display: none;
+	color: #FF0A0A;
+}
+
+ul#controls li#play a:hover {
+	color: #D60000;
 }
 
 

@@ -1,4 +1,4 @@
-var ctx, mainCanvas, socket, client, activeTool;
+var ctx, mainCanvas, client, activeTool;
 
 var store = window.localStorage;
 
@@ -7,7 +7,9 @@ var store = window.localStorage;
 var CONFIG = {
 			clientId: "#",
 			tool: 'brush',
-			color: {}
+			color: {},
+			gameStarted: false,
+			myTurn: false
 		};
 		
 
@@ -15,52 +17,106 @@ var CONFIG = {
 $(document).ready(function() {
 	
 function init() {
-	socket = io.connect();	
 	
-	socket.on('join', function(data) {	
+	
+	// Connect
+	
+	now.join = function(data) {
 		CONFIG.clientId = data.clientId;
-		loadFromLocalStorage()
-	});
+		//loadFromLocalStorage()
+  	};
 	
+	
+	
+	// Draw Events
 	
 	var t;
 	
-	socket.on('drawStart', function(data) {
+	now.clientDrawStart = function(data) {
 		t = new tools[data.tool];
 		t.drawStart(data.x, data.y);
-	});
+	};
 	
-	socket.on('draw', function(data) {
+	now.clientDraw = function(data) {
 		t.draw(data.point);
-	});
+	};
 	
-	socket.on('drawEnd', function(data) {
+	now.clientDrawEnd = function(data) {
 		t.drawEnd();
+	};
+	
+	now.clientChangeBackground = function(data) {
+		mainCanvas.css('backgroundColor', data.color);
+	};
+	
+	
+	
+	// Game Events
+	
+	now.updatePlayers = function(data) {
+		$("div#sub-headline h3 span").html('People online (' + (data.players.length - 1) + ')');
+		
+		CONFIG.gameStarted = data.gameStarted;
+		
+		CONFIG.gameStarted ? $('#gameState').text('Game started').show() : $('#gameState').hide();
+	};
+	
+	now.startGame = function() {
+		CONFIG.gameStarted = true;
+		CONFIG.gameStarted ? $('#gameState').text('Game started').show() : $('#gameState').hide();
+		$('#currentStatus').show();
+	};
+
+	now.endGame = function() {
+		CONFIG.gameStarted = false;
+		CONFIG.gameStarted ? $('#gameState').text('Game started').show() : $('#gameState').hide();
+		$('#currentStatus').hide();
+		$('#play a').hide();
+		$('#playersOnline').text('No players online.');
+	};
+	
+	now.yourTurn = function() {
+		CONFIG.myTurn = true;
+		$('#currentStatus').text('Your turn.');
+		$('#play a').show();
+		
+		alert('your turn');
+	};
+	
+	
+	// Play move
+	
+	$('#play a').click(function() {
+		CONFIG.myTurn = false;
+		$('#currentStatus').text('Waiting for opponent...');
+		$('#play a').hide();
+		now.playMove();
 	});
 	
 	
 	
-	socket.on('updateClients', function(data) {
-		$("div#sub-headline h3 span").html('People online (' + data.clients + ')');
-	});
 	
+	// Bindings
 	
 	mainCanvas = $('#main-canvas');
 	ctx = mainCanvas[0].getContext('2d');
 	
-  	
-
   	mainCanvas.bind('mousedown', canvasMove, false);
   	mainCanvas.bind('mousemove', canvasMove, false); 
   	mainCanvas.bind('mouseup',   canvasMove, false);
   	
-  	$('#clear').bind('click', clearCanvas, false);
+  	$('#clear').bind('click', function() {
+  		if (!CONFIG.myTurn) return;
+  		clearCanvas();
+  	});
   	
   	$('#tools').bind('click', function() {
+  		if (!CONFIG.myTurn) return;
   		$('#tools').toggleClass('active');
   	});
   	
   	$('#color a').bind('click', function() {
+		if (!CONFIG.myTurn) return;
   		$('#color').toggleClass('active');
   	});
   	
@@ -79,6 +135,7 @@ function init() {
 	
 
 
+// Brushes
 
 var tools = {};
 
@@ -90,7 +147,7 @@ tools.brush = function() {
 
  	this.mousedown = function (ev) {
 		tool.drawStart(ev._x, ev._y);
-		socket.emit('drawStart', { 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool });
+		now.drawStart({ 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool });
     };
 
     this.mousemove = function (ev) {
@@ -106,13 +163,13 @@ tools.brush = function() {
 			};
 		
 			tool.draw(point);
-			socket.emit('draw', { 'point': point });
+			now.draw({ 'point': point });
     	}
     };
 
   	this.mouseup = function (ev) {
     	tool.drawEnd();
-    	socket.emit('drawEnd', { 'tool': CONFIG.tool });
+    	now.drawEnd({ 'tool': CONFIG.tool });
   	};
   	
   	
@@ -136,7 +193,7 @@ tools.brush = function() {
 		if (tool.started) {
       		ctx.closePath();
       		tool.started = false;
-      		saveToLocalStorage();
+      		//saveToLocalStorage();
     	}
 	}
 };
@@ -153,7 +210,7 @@ tools.pencil = function() {
 
  	this.mousedown = function (ev) {
 		tool.drawStart(ev._x, ev._y);
-		socket.emit('drawStart', { 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool });
+		now.drawStart({ 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool });
     };
 
     this.mousemove = function (ev) {
@@ -169,13 +226,13 @@ tools.pencil = function() {
 			};
 		
 			tool.draw(point);
-			socket.emit('draw', { 'point': point });
+			now.draw({ 'point': point });
     	}
     };
 
   	this.mouseup = function (ev) {
     	tool.drawEnd();
-    	socket.emit('drawEnd', { 'tool': CONFIG.tool });
+    	now.drawEnd({ 'tool': CONFIG.tool });
   	};
   	
   	
@@ -212,16 +269,21 @@ tools.pencil = function() {
 		if (tool.started) {
       		ctx.closePath();
       		tool.started = false;
-      		saveToLocalStorage();
+      		//saveToLocalStorage();
     	}
 	}
 };
 
 
 	
-	
+
+// Utility Functions
 
 function canvasMove (ev) {
+	
+	if (!CONFIG.myTurn)
+		return;
+	
 	if (ev.clientY || ev.clientX == 0) {
 		ev._x = ev.clientX - this.offsetLeft;
 	    ev._y = ev.clientY - this.offsetTop;
@@ -238,7 +300,7 @@ function clearCanvas() {
 	ctx.setTransform(1, 0, 0, 1, 0, 0);
 	ctx.clearRect(0, 0, mainCanvas.width(), mainCanvas.height());
 	ctx.restore();
-	saveToLocalStorage();
+	//saveToLocalStorage();
 }
 
 function randomizeColor() {
@@ -283,7 +345,9 @@ function loadColorPicker() {
 		   	 CONFIG.color.background = 'rgb(' + data[0] + ',' + data[1] +',' + data[2] + ')';
 		     $('#background').css('backgroundColor', CONFIG.color.background);
 		     mainCanvas.css('backgroundColor', CONFIG.color.background);
-		     saveToLocalStorage();
+		     //saveToLocalStorage();
+		     
+		     now.changeBackground({ 'color': CONFIG.color.background });
 		}
 
 	});
@@ -300,7 +364,9 @@ function loadColorPicker() {
 		    	CONFIG.color.background = 'rgb(' + data[0] + ',' + data[1] +',' + data[2] + ')';
 		    	$('#background').css('backgroundColor', CONFIG.color.background);
 		    	mainCanvas.css('backgroundColor', CONFIG.color.background);
-		    	saveToLocalStorage();
+		    	//saveToLocalStorage();
+		    	
+		    	now.changeBackground({ 'color': CONFIG.color.background });
 		    }
 	    					
     	}
@@ -322,6 +388,10 @@ function loadColorPicker() {
 		$('#preview').css('backgroundColor', $(this).css('backgroundColor'));
 	});
 }
+
+
+
+// Local Storage
 
 function saveToLocalStorage() {
 	if (window['localStorage'] !== null) {

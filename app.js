@@ -1,13 +1,18 @@
 
+var CONFIG = {
+			gameStarted: false,
+			players: [],
+			currentPlayer: "#"
+		};
+
 // Module dependencies.
 
 var express = require('express')
     , app = express.createServer()
-	, io = require('socket.io')
-	, port = process.argv[2] || 80
+	, nowjs = require("now")
+	, port = process.argv[2] || 1337
 	, buffer = []
 	, count = -1
-	, socket
 
 
 // Configuration
@@ -47,50 +52,112 @@ app.use(function(req, res){
 });
 
 app.listen(port);
+
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
 
-// socket.io
+// now.js
 
-socket = io.listen(app);
+var everyone = require("now").initialize(app);
 
-socket.sockets.on('connection', function(client) {
-	
-	client.emit('join', { 'clientId': client.id });	
-	
-	count++;
-	
-	if (count > 0) {
-		client.emit('updateClients', { 'clients': count });
-		client.broadcast.emit('updateClients', { 'clients': count });
-	}
-	
-	client.on('drawStart', function(data) {
-		console.log('tool', data.tool);
-		console.log('tool', data.tool.started);
-		console.log('tool', data.tool.draw);
-		client.broadcast.emit('drawStart', data );
-	});
-			
-	client.on('draw', function(data) {
 
-		buffer.push(data.point)
-		if (buffer.length > 1024) buffer.shift();
+// Connect
+
+nowjs.on('connect', function() {
+	
+	this.now.join({ 'clientId': this.user.clientId });	
+	
+	CONFIG.players.push(this.user.clientId);
+	
+	if (CONFIG.players.length > 1) {
+		everyone.now.updatePlayers({ 'players': CONFIG.players, 'gameStarted': CONFIG.gameStarted });
 		
-		client.broadcast.emit('draw', data);
-		
-		console.log(client.id);
-
-	});
-	
-	client.on('drawEnd', function(data) {
-		client.broadcast.emit('drawEnd', data);
-	})
-	
-	client.on('disconnect', function(){
-		count--;
-        client.broadcast.emit('updateClients', { 'clients': count });
-    });
-    
+		if (!CONFIG.gameStarted)
+			startGame();
+	} 
 });
+
+
+// Game Events
+
+everyone.now.playMove = function() {
+	var index;	
+	
+	for (var i = 0; i < CONFIG.players.length; i++) {
+		if (CONFIG.players[i] == CONFIG.currentPlayer) {
+			index = i;
+		}
+	}
+
+	if (index == CONFIG.players.length - 1) {
+		CONFIG.currentPlayer = CONFIG.players[0];
+	} else {
+		CONFIG.currentPlayer = CONFIG.players[index + 1];
+	}
+		
+	nowjs.getClient(CONFIG.currentPlayer, function() {
+		this.now.yourTurn();
+	});
+};
+
+
+
+
+
+
+// Draw Events
+
+everyone.now.drawStart = function(data) {
+	everyone.now.clientDrawStart(data);
+};
+			
+everyone.now.draw = function(data) {
+	buffer.push(data.point)
+	if (buffer.length > 1024) buffer.shift();
+		
+	everyone.now.clientDraw(data);
+};
+	
+everyone.now.drawEnd = function(data) {
+	everyone.now.clientDrawEnd(data);
+};
+
+everyone.now.changeBackground = function(data) {
+	everyone.now.clientChangeBackground(data);
+};
+
+
+
+// Disconnect
+
+nowjs.on('disconnect', function(){
+	CONFIG.players.splice(CONFIG.players.indexOf(CONFIG.currentPlayer), 1);
+	
+    everyone.now.updatePlayers({ 'players': CONFIG.players, 'gameStarted': CONFIG.gameStarted });
+    
+    if (CONFIG.players.length <= 1 && CONFIG.gameStarted) 
+		endGame();
+});
+
+
+
+
+
+// Game Functions
+
+function startGame() {
+	CONFIG.gameStarted = true;
+	everyone.now.startGame();
+	
+	CONFIG.currentPlayer = CONFIG.players[0];
+	 
+	nowjs.getClient(CONFIG.currentPlayer, function() {
+		this.now.yourTurn();
+	});
+}
+
+function endGame() {
+	CONFIG.gameStarted = false;
+	everyone.now.endGame();
+}
 
