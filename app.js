@@ -10,7 +10,7 @@ var CONFIG = {
 var express = require('express')
     , app = express.createServer()
 	, nowjs = require("now")
-	, port = process.argv[2] || 80
+	, port = process.argv[2] || 1337
 	, buffer = []
 	, count = -1
 
@@ -124,6 +124,10 @@ everyone.now.drawEnd = function(data) {
 
 everyone.now.changeBackground = function(data) {
 	everyone.now.clientChangeBackground(data);
+};
+
+everyone.now.clearCanvas = function() {
+	everyone.now.clientClearCanvas();
 };
 
 
