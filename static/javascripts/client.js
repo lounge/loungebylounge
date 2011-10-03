@@ -49,6 +49,10 @@ function init() {
 		mainCanvas.css('backgroundColor', data.color);
 	};
 	
+	now.clientClearCanvas = function() {
+		clearCanvas();
+	};
+	
 	
 	
 	// Game Events
@@ -108,6 +112,8 @@ function init() {
   	$('#clear').bind('click', function() {
   		if (!CONFIG.myTurn) return;
   		clearCanvas();
+  		
+  		now.clearCanvas();
   	});
   	
   	$('#tools').bind('click', function() {
