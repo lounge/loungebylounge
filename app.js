@@ -1,4 +1,3 @@
-
 var CONFIG = {
 			gameStarted: false,
 			players: [],
@@ -58,7 +57,7 @@ console.log("Express server listening on port %d in %s mode", app.address().port
 
 // now.js
 
-var everyone = require("now").initialize(app);
+var everyone = require("now").initialize(app, {socketio: {transports: ['xhr-polling', 'jsonp-polling']}});
 
 
 // Connect
