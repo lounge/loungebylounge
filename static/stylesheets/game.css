@@ -1,52 +1,13 @@
-body {
-	background-color: #F8F7F7;
-    background: -moz-linear-gradient(center top , #FFFFFF, #ECE9E9) no-repeat scroll 0 0 #ECE9E9;
-    color: #555555;
-    font: 13px "Helvetica Neue","Lucida Grande","Arial";
-    margin: 0;
-}
-
-h1, h2, h3 {
-    color: #343434;
-    font-size: 22px;
-    margin: 0;
-}
-
-h1 em, h2 em {
-    font-weight: normal;
-    padding: 0 5px;
-}
-
-h1 {
-    font-size: 60px;
-}
-
-h2 {
-    margin-top: 10px;
-}
-
-h3 {
-    font-size: 18px;
-    margin: 5px 0 10px;
-    padding-bottom: 5px;
-}
-
-ul {
-    margin: 0;
-    padding: 0;
-}
-
-p {
-    line-height: 1.5;
-}
-
-a {
-    color: #555555;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #303030;
+#wrapper h2#current-status {
+	background: none repeat scroll 0 0 #343434;
+    clear: both;
+    color: #FFFFFF;
+    display: none;
+    float: right;
+    font-style: italic;
+    margin-left: 15px;
+    margin-top: -55px;
+    padding: 5px;
 }
 
 canvas#main-canvas {
@@ -55,65 +16,16 @@ canvas#main-canvas {
 	border: 1px solid #EEEEEE;
 }
 
-#wrapper {
-	margin: 100px auto 0;
-    width: 960px;
-    min-height: 400px;
-}
-
-#wrapper h1#logo {
-	display: inline;
-	letter-spacing: -6px;
-}
-
-#wrapper h2#currentStatus {
-	background: none repeat scroll 0 0 #343434;
-    clear: both;
-    color: #FFFFFF;
-    display: none;
-    float: right;
-    font-style: italic;
-    margin-left: 15px;
-    margin-top: 25px;
-    padding: 5px;
-}
-
-#sub-headline {
-	border-bottom: 1px solid #EEEEEE;
-	height: 30px;
-    margin-bottom: 20px;
-}
-
-
-#sub-headline h3 span {
-	display: inline;
-    font-size: 14px;
-    font-weight: normal;
-    margin-left: 20px;
-}
-
-#sub-headline h3 span#gameState {
+#main-list span#game-state {
 	background-color: #343434;
     color: #FFFFFF;
     padding: 3px;
     display: none;
 }
 
-ul#controls {
-	float: right;
-	clear: both;
-}
 
-ul#controls li {
-	list-style: none;
-	list-style-type: none;
-	float: left;
-	margin-left: 10px;
-	padding: 9px;
-	margin-top: -9px;
-}
 
-ul#controls li.active {
+ul#menu li.active {
 	background-color: #FFFFFF;
     border: 1px solid #EEEEEE;
     color: #555555;
@@ -123,7 +35,7 @@ ul#controls li.active {
 	margin-top: -9px;
 }
 
-ul#controls li#color.active {
+ul#menu li#color.active {
     margin-right: -164px;
     padding: 8px 172px 8px 8px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
@@ -132,7 +44,7 @@ ul#controls li#color.active {
     position: relative;
 }
 
-ul#controls li#color #colorHolder {
+ul#menu li#color #color-holder {
     background-color: #FFFFFF;
     border-bottom: 1px solid #ECE9E9;
     border-left: 1px solid #ECE9E9;
@@ -144,15 +56,15 @@ ul#controls li#color #colorHolder {
     height: 200px;
     position: absolute;
     right: -1px;
-    top: 38px;
+    top: 36px;
     width: 140px;
 }
 
-ul#controls li#color.active #colorHolder {
+ul#menu li#color.active #color-holder {
     display: block;
 }
 
-ul#controls li#color.active #colorHolder #preview {
+ul#menu li#color.active #color-holder #preview {
     border: 1px solid #ECE9E9;
     height: 20px;
     margin: 0 auto;
@@ -160,7 +72,7 @@ ul#controls li#color.active #colorHolder #preview {
     margin-bottom: 7px;
 }
 
-ul#controls li#color.active #colorHolder #foreground {
+ul#menu li#color.active #color-holder #foreground {
     border: 1px solid #ECE9E9;
     display: inline-block;
     height: 20px;
@@ -168,7 +80,7 @@ ul#controls li#color.active #colorHolder #foreground {
     width: 30px;
 }
 
-ul#controls li#color.active #colorHolder #background {
+ul#menu li#color.active #color-holder #background {
     border: 1px solid #ECE9E9;
     display: inline-block;
     height: 20px;
@@ -176,14 +88,14 @@ ul#controls li#color.active #colorHolder #background {
     width: 30px;
 }
 
-ul#controls li#tools.active {
+ul#menu li#tools.active {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
 	-webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
     position: relative;
 }
 
-ul#controls li#tools #toolsHolder {
+ul#menu li#tools #tools-holder {
     background-color: #FFFFFF;
     border-bottom: 1px solid #ECE9E9;
     border-left: 1px solid #ECE9E9;
@@ -199,16 +111,16 @@ ul#controls li#tools #toolsHolder {
     width: 59px;
 }
 
-ul#controls li#tools.active #toolsHolder {
+ul#menu li#tools.active #tools-holder {
     display: block;
 }
 
-ul#controls li#tools.active #toolsHolder ul {
+ul#menu li#tools.active #tools-holder ul {
 
 }
 
 
-ul#controls li#tools.active #toolsHolder ul li {
+ul#menu li#tools.active #tools-holder ul li {
     background-position: center center;
     background-repeat: no-repeat;
     float: none;
@@ -217,32 +129,24 @@ ul#controls li#tools.active #toolsHolder ul li {
     padding: 0 0 0 10px;
 }
 
-ul#controls li#tools.active #toolsHolder ul li:hover {
+ul#menu li#tools.active #tools-holder ul li:hover {
     cursor: pointer;
 }
 
-ul#controls li#tools.active #toolsHolder ul li#pencil {
+ul#menu li#tools.active #tools-holder ul li#pencil {
     background-image: url("/images/pen.png");
 }
 
-ul#controls li#tools.active #toolsHolder ul li#brush {
+ul#menu li#tools.active #tools-holder ul li#brush {
     background-image: url("/images/brush.png");
 }
 
-ul#controls li#play a {
+ul#menu li#play a {
 	display: none;
 	color: #FF0A0A;
 }
 
-ul#controls li#play a:hover {
+ul#menu li#play a:hover {
 	color: #D60000;
 }
-
-
-
-
-
-
-
-
 
