@@ -1,0 +1,23 @@
+* Sign-in page
+
+* Lobby page
+
+  * Player listing
+  * Create game
+  * Join game
+
+* Alert when somebody adds you to a game
+
+  * Confirm
+  * Dismis
+  
+* Time limit on turns
+
+* Save image when 'done'
+
+* Browse saved images
+
+* Show current state when joining game
+
+* MongoDB
+

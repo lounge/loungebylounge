@@ -1,147 +1,21 @@
-var ctx, mainCanvas, client, activeTool;
 
-var store = window.localStorage;
-
-
-
-var CONFIG = {
-			clientId: "#",
-			tool: 'brush',
-			color: {},
-			gameStarted: false,
-			myTurn: false
-		};
+//var LBL = {}
+Game = (function() {
+	
+	var ctx, mainCanvas, client, activeTool;
 		
-
-
-$(document).ready(function() {
-	
-function init() {
-	
-	
-	// Connect
-	
-	now.join = function(data) {
-		CONFIG.clientId = data.clientId;
-		//loadFromLocalStorage()
-  	};
-	
-	
-	
-	// Draw Events
-	
-	var t;
-	
-	now.clientDrawStart = function(data) {
-		t = new tools[data.tool];
-		t.drawStart(data.x, data.y);
-	};
-	
-	now.clientDraw = function(data) {
-		t.draw(data.point);
-	};
-	
-	now.clientDrawEnd = function(data) {
-		t.drawEnd();
-	};
-	
-	now.clientChangeBackground = function(data) {
-		mainCanvas.css('backgroundColor', data.color);
-	};
-	
-	now.clientClearCanvas = function() {
-		clearCanvas();
+	var CONFIG = {
+		clientId: "#",
+		tool: 'brush',
+		color: {},
+		gameStarted: false,
+		currentGroup: '#',
+		myTurn: false
 	};
 	
 	
 	
-	// Game Events
-	
-	now.updatePlayers = function(data) {
-		$("div#sub-headline h3 span").html('People online (' + (data.players.length - 1) + ')');
-		
-		CONFIG.gameStarted = data.gameStarted;
-		
-		CONFIG.gameStarted ? $('#gameState').text('Game started').show() : $('#gameState').hide();
-	};
-	
-	now.startGame = function() {
-		CONFIG.gameStarted = true;
-		CONFIG.gameStarted ? $('#gameState').text('Game started').show() : $('#gameState').hide();
-		$('#currentStatus').show();
-	};
-
-	now.endGame = function() {
-		CONFIG.gameStarted = false;
-		CONFIG.gameStarted ? $('#gameState').text('Game started').show() : $('#gameState').hide();
-		$('#currentStatus').hide();
-		$('#play a').hide();
-		$('#playersOnline').text('No players online.');
-	};
-	
-	now.yourTurn = function() {
-		CONFIG.myTurn = true;
-		$('#currentStatus').text('Your turn.');
-		$('#play a').show();
-		
-		alert('your turn');
-	};
-	
-	
-	// Play move
-	
-	$('#play a').click(function() {
-		CONFIG.myTurn = false;
-		$('#currentStatus').text('Waiting for opponent...');
-		$('#play a').hide();
-		now.playMove();
-	});
-	
-	
-	
-	
-	// Bindings
-	
-	mainCanvas = $('#main-canvas');
-	ctx = mainCanvas[0].getContext('2d');
-	
-  	mainCanvas.bind('mousedown', canvasMove, false);
-  	mainCanvas.bind('mousemove', canvasMove, false); 
-  	mainCanvas.bind('mouseup',   canvasMove, false);
-  	
-  	$('#clear').bind('click', function() {
-  		if (!CONFIG.myTurn) return;
-  		clearCanvas();
-  		
-  		now.clearCanvas();
-  	});
-  	
-  	$('#tools').bind('click', function() {
-  		if (!CONFIG.myTurn) return;
-  		$('#tools').toggleClass('active');
-  	});
-  	
-  	$('#color a').bind('click', function() {
-		if (!CONFIG.myTurn) return;
-  		$('#color').toggleClass('active');
-  	});
-  	
-  	$('#toolsHolder ul li').bind('click', function() {
-  		activeTool = new tools[$(this).attr('id')]();
-  		CONFIG.tool = $(this).attr('id');
-  	})
-  	
-  	CONFIG.color = randomizeColor();
-  	
-  	loadColorPicker();
-  	
-  	activeTool = new tools[CONFIG.tool]();
-}
-	
-	
-
-
-// Brushes
+	// Brushes
 
 var tools = {};
 
@@ -153,7 +27,7 @@ tools.brush = function() {
 
  	this.mousedown = function (ev) {
 		tool.drawStart(ev._x, ev._y);
-		now.drawStart({ 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool });
+		now.drawStart({ 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool, 'group': CONFIG.currentGroup });
     };
 
     this.mousemove = function (ev) {
@@ -169,13 +43,13 @@ tools.brush = function() {
 			};
 		
 			tool.draw(point);
-			now.draw({ 'point': point });
+			now.draw({ 'point': point, 'group': CONFIG.currentGroup });
     	}
     };
 
   	this.mouseup = function (ev) {
     	tool.drawEnd();
-    	now.drawEnd({ 'tool': CONFIG.tool });
+    	now.drawEnd({ 'tool': CONFIG.tool, 'group': CONFIG.currentGroup });
   	};
   	
   	
@@ -216,7 +90,7 @@ tools.pencil = function() {
 
  	this.mousedown = function (ev) {
 		tool.drawStart(ev._x, ev._y);
-		now.drawStart({ 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool });
+		now.drawStart({ 'x': ev._x, 'y': ev._y, 'tool': CONFIG.tool, 'group': CONFIG.currentGroup });
     };
 
     this.mousemove = function (ev) {
@@ -232,13 +106,13 @@ tools.pencil = function() {
 			};
 		
 			tool.draw(point);
-			now.draw({ 'point': point });
+			now.draw({ 'point': point, 'group': CONFIG.currentGroup });
     	}
     };
 
   	this.mouseup = function (ev) {
     	tool.drawEnd();
-    	now.drawEnd({ 'tool': CONFIG.tool });
+    	now.drawEnd({ 'tool': CONFIG.tool, 'group': CONFIG.currentGroup });
   	};
   	
   	
@@ -265,7 +139,7 @@ tools.pencil = function() {
                 ctx.beginPath();
                 ctx.moveTo(this.points[this.count][0] + (b * 0.3), this.points[this.count][1] + (a * 0.3));
                 ctx.lineTo(this.points[e][0] - (b * 0.3), this.points[e][1] - (a * 0.3));
-                ctx.stroke()
+                ctx.stroke();
             }
         }
         this.count++
@@ -332,14 +206,14 @@ function loadColorPicker() {
 	var foregroung = true;
 	var background = false;
 	
-	var ctx = $('#colorPicker')[0].getContext('2d');  
+	var ctx = $('#color-picker')[0].getContext('2d');  
     var img = new Image();  
     img.onload = function(){  
       ctx.drawImage(img,0,0); 
     };  
     img.src = 'images/color-picker.png';  
     
-    $('#colorPicker').mousedown(function(e) {
+    $('#color-picker').mousedown(function(e) {
     	select = true;
 	    var data = ctx.getImageData(e.clientX - $(this).offset().left, e.clientY - $(this).offset().top, 1, 1).data;
 	    $('#preview').css('backgroundColor', 'rgb(' + [].slice.call(data, 0, 3).join() + ')');
@@ -353,12 +227,12 @@ function loadColorPicker() {
 		     mainCanvas.css('backgroundColor', CONFIG.color.background);
 		     //saveToLocalStorage();
 		     
-		     now.changeBackground({ 'color': CONFIG.color.background });
+		     now.changeBackground({ 'color': CONFIG.color.background, 'group': CONFIG.currentGroup });
 		}
 
 	});
 	
-	$('#colorPicker').mousemove(function(e) {
+	$('#color-picker').mousemove(function(e) {
     	if (select) {
 		    var data = ctx.getImageData(e.clientX - $(this).offset().left, e.clientY - $(this).offset().top, 1, 1).data;
 		    $('#preview').css('backgroundColor', 'rgb(' + [].slice.call(data, 0, 3).join() + ')');
@@ -372,13 +246,13 @@ function loadColorPicker() {
 		    	mainCanvas.css('backgroundColor', CONFIG.color.background);
 		    	//saveToLocalStorage();
 		    	
-		    	now.changeBackground({ 'color': CONFIG.color.background });
+		    	now.changeBackground({ 'color': CONFIG.color.background , 'group': CONFIG.currentGroup });
 		    }
 	    					
     	}
 	});
 	
-	$('#colorPicker').mouseup(function(e) {
+	$('#color-picker').mouseup(function(e) {
     	select = false;
 	});
 	
@@ -395,25 +269,139 @@ function loadColorPicker() {
 	});
 }
 
-
-
-// Local Storage
-
-function saveToLocalStorage() {
-	if (window['localStorage'] !== null) {
-    	localStorage['canvas'] = document.getElementById('main-canvas').toDataURL('image/png');
-    }
-}
-
-function loadFromLocalStorage() {	
-	if (window['localStorage'] !== null && localStorage['canvas']) {
-    	localStorageImage = new Image();
-        localStorageImage.src = localStorage['canvas'];
-        ctx.drawImage(localStorageImage, 0, 0);
-   }
-}
 	
-  init();
+	
+	
+	return {
+	
+		init: function() {
+			
+			
+			now.join = function(data) {
+				CONFIG.user = data.user;
+				//loadFromLocalStorage()
+		  	};
+			
+			
+			
+			// Draw Events
+			
+			var t;
+			
+			now.clientDrawStart = function(data) {
+				t = new tools[data.tool];
+				t.drawStart(data.x, data.y);
+			};
+			
+			now.clientDraw = function(data) {
+				t.draw(data.point);
+			};
+			
+			now.clientDrawEnd = function(data) {
+				t.drawEnd();
+			};
+			
+			now.clientChangeBackground = function(data) {
+				mainCanvas.css('backgroundColor', data.color);
+			};
+			
+			now.clientClearCanvas = function() {
+				clearCanvas();
+			};
+			
+			
+			
+			// Game Events
+			
+	//		now.updatePlayers = function(data) {
+	//			$('#players-online').text('People online (' + (data.players.length - 1) + ')');
+	//			
+	//			CONFIG.gameStarted = data.gameStarted;
+	//			
+	//			CONFIG.gameStarted ? $('#game-state').text('Game started').show() : $('#game-state').hide();
+	//		};
+	
+			
+			
+			now.setGameStarted = function(data) {
+				$('#invitation').remove();
+				CONFIG.currentGroup = data;
+				CONFIG.gameStarted = true;
+				CONFIG.gameStarted ? $('#game-state').text('Game started').show() : $('#game-state').hide();
+				$('#current-status').show();
+			};
+		
+			now.setGameEnded = function() {
+				CONFIG.gameStarted = false;
+				CONFIG.gameStarted ? $('#game-state').text('Game started').show() : $('#game-state').hide();
+				$('#current-status').hide();
+				$('#play a').hide();
+			};
+			
+			now.setYourTurn = function() {
+				CONFIG.myTurn = true;
+				$('#current-status').text('Your turn.');
+				$('#play a').show();
+			};
+			
+			
+			// Play move
+			
+			$('#play a').click(function() {
+				CONFIG.myTurn = false;
+				$('#current-status').text('Waiting for opponent...');
+				$('#play a').hide();
+				now.playMove({ 'group': CONFIG.currentGroup });
+			});
+			
+			
+			
+			
+			// Bindings
+			
+			mainCanvas = $('#main-canvas');
+			ctx = mainCanvas[0].getContext('2d');
+			
+		  	mainCanvas.bind('mousedown', canvasMove, false);
+		  	mainCanvas.bind('mousemove', canvasMove, false); 
+		  	mainCanvas.bind('mouseup',   canvasMove, false);
+		  	
+		  	$('#clear').bind('click', function() {
+		  		if (!CONFIG.myTurn) return;
+		  		clearCanvas();
+		  		
+		  		now.clearCanvas({ 'group': CONFIG.currentGroup });
+		  	});
+		  	
+		  	$('#tools').bind('click', function() {
+		  		if (!CONFIG.myTurn) return;
+		  		$('#tools').toggleClass('active');
+		  	});
+		  	
+		  	$('#color a').bind('click', function() {
+				if (!CONFIG.myTurn) return;
+		  		$('#color').toggleClass('active');
+		  	});
+		  	
+		  	$('#tools-holder ul li').bind('click', function() {
+		  		activeTool = new tools[$(this).attr('id')]();
+		  		CONFIG.tool = $(this).attr('id');
+		  	})
+		  	
+		  	CONFIG.color = randomizeColor();
+		  	
+		  	loadColorPicker();
+		  	
+		  	activeTool = new tools[CONFIG.tool]();
+		}	
+	}
+	
+	
+	
 
-}, false);
+
+	
+	//init();
+	
+}());
 			

@@ -1,0 +1,179 @@
+/* LOBBY */
+
+
+
+#content #online-list {
+    float: left;
+    min-height: 400px;
+    width: 200px;
+}
+
+#content #online-list span.topic {
+	border-bottom: 1px solid #EEEEEE;
+    display: block;
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#content #online-list ul {
+}
+
+#content #online-list ul li {
+	border-bottom: 1px solid #EEEEEE;
+    line-height: 20px;
+    padding: 5px;
+}
+
+#content #online-list ul li:hover {
+	cursor: pointer;
+	background-color: rgba(248, 247, 247, 0.8);
+}
+
+#content #player-drop {
+	 float: left;
+    margin-left: 75px;
+    margin-top: 20px;
+}
+
+#content #player-drop #drop {
+	border: 1px solid #B3B3B3;
+    font-size: 20px;
+    font-weight: bold;
+    height: 50px;
+    padding-top: 20px;
+    text-align: center;
+    width: 300px;
+}
+
+#content #player-drop #drop.drop-active {
+    border: 1px dashed #B3B3B3;
+}
+
+#content #player-drop #drop.drop-hover {
+	background-color: #F8F7F7;
+    border: 1px dashed #B3B3B3;
+}
+
+#content #player-drop #start-game {
+	border: 1px solid #D4D4D4;
+    display: none;
+}
+
+#content #player-drop #send-invitation {
+	background-color: #343434;
+    color: #FFFFFF;
+    display: none;
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+#content #player-drop #send-invitation:hover {
+	cursor: pointer;
+	background-color: #000000;
+}
+
+#content #player-drop #start-game {
+	background-color: #343434;
+    color: #FFFFFF;
+    display: none;
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+#content #player-drop #start-game:hover {
+	cursor: pointer;
+	background-color: #000000;
+}
+
+#content #wait-list {
+	 float: right;
+    margin-left: 50px;
+    width: 300px;
+    display:none;
+}
+
+#content #wait-list span.topic {
+	border-bottom: 1px solid #EEEEEE;
+    display: block;
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#content #wait-list ul {
+}
+
+#content #wait-list ul li {
+	border-bottom: 1px solid #EEEEEE;
+    line-height: 20px;
+    padding: 5px;
+}
+
+#content #wait-list ul li:hover {
+	background-color: rgba(248, 247, 247, 0.8);
+}
+
+#content #wait-list ul li.pending {
+	background-color: rgba(255, 255, 0, 0.6);
+}
+
+#content #wait-list ul li.declined {
+	background-color: rgba(255, 0, 0, 0.4);
+    background-image: url('/Images/cancel.png');
+    background-position: 98% center;
+    background-repeat: no-repeat;
+    color: black;
+}
+
+#content #wait-list ul li.accepted {
+	background-color: rgba(0, 255, 0, 0.4);
+    background-image: url('/Images/check.png');
+    background-position: 98% center;
+    background-repeat: no-repeat;
+    color: black;
+}
+
+#wrapper #invitation {
+	background-color: #000000;
+    color: #FFFFFF;
+    display: inline-block;
+    float: right;
+    padding: 15px;
+}
+
+#wrapper #invitation span {
+	border: 1px solid #EEEEEE;
+    margin-left: 10px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#wrapper #invitation span:hover {
+	color: #000000;
+	background-color: #FFFFFF;
+}
+
+#wrapper #invitation span.accept {
+	cursor: pointer;
+}
+
+#wrapper #invitation span.decline {
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+

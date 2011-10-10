@@ -1,0 +1,19 @@
+div#content
+
+	
+	div#online-list
+		span.topic Online
+		ul
+			each player in players
+				li(clientid= player.id)= "+ " + player.nick
+				
+	div#player-drop
+		div#drop Drop players here
+		
+		span#send-invitation send invitation
+		span#start-game start game
+	
+	div#wait-list
+		span.topic Online
+		ul
+	

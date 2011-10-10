@@ -1,34 +1,22 @@
-div#wrapper
-	h1#logo loungebyloungé
+extends layouts/main_layout
 	
-	
-	h2#currentStatus Waiting for opponent...
-		
-	div#sub-headline
-		h3 
-			em - Welcome to loungebylounge.com
-			span#playersOnline No players online.
-			span#gameState 
-						
-			ul#controls
-				li#play
-					a(href="#") play
-				li#clear 
-					a(href="#") clear
-				li#tools 
-					a(href="#") tools
-					div#toolsHolder
-						ul
-							li#brush
-							li#pencil
-				li#color 
-					a(href="#") color
-					div#colorHolder
-						canvas#colorPicker(width="135px", height="135px")
-						div#preview
-						div#foreground
-						div#background
-				
-	canvas#main-canvas(width="960px", height="400px")
-			
-		
+block main-list	
+	h3  - Welcome to loungebylounge.com
+	span#players-online No players online.
+					
+	ul#menu
+		li#sign-in
+			a(href="#") sign in
+			div#sign-in-box
+				input#nickname
+				span#sign-in sign in
+
+block content
+	div.canvas-thumb
+	div.canvas-thumb
+	div.canvas-thumb
+	div.canvas-thumb.last
+	div.canvas-thumb
+	div.canvas-thumb
+	div.canvas-thumb
+	div.canvas-thumb.last
