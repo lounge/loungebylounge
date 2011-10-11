@@ -159,6 +159,9 @@ tools.pencil = function() {
 
 // Utility Functions
 
+
+
+
 function canvasMove (ev) {
 	
 	if (!CONFIG.myTurn)
@@ -386,7 +389,12 @@ function loadColorPicker() {
 		  	$('#tools-holder ul li').bind('click', function() {
 		  		activeTool = new tools[$(this).attr('id')]();
 		  		CONFIG.tool = $(this).attr('id');
-		  	})
+		  	});
+		  	
+		  	$('#save-canvas').bind('click', function() {
+		  		var img = mainCanvas[0].toDataURL("image/png");
+		  		now.saveCanvas(img);
+		  	});
 		  	
 		  	CONFIG.color = randomizeColor();
 		  	

@@ -12,11 +12,8 @@ block main-list
 				span#sign-in sign in
 
 block content
-	div.canvas-thumb
-	div.canvas-thumb
-	div.canvas-thumb
-	div.canvas-thumb.last
-	div.canvas-thumb
-	div.canvas-thumb
-	div.canvas-thumb
-	div.canvas-thumb.last
+	each canvas, i in canvases
+		if i+1 == 4 || i+1 == 8
+			img.canvas-thumb.last(src= "/gallery/" + canvas)
+		else
+			img.canvas-thumb(src= "/gallery/" + canvas)

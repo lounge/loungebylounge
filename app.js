@@ -8,6 +8,7 @@ var CONFIG = {
 // Module dependencies.
 
 var express = require('express')
+	, fs = require("fs")
 	, everyone
 	, port
     , app = express.createServer()
@@ -18,7 +19,7 @@ var express = require('express')
 
 // Configuration
 
-app.settings.env = 'production';
+app.settings.env = 'development';
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -46,10 +47,7 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-	res.render('index', {
-    	title: 'loungebyloungé'
-    	//layout: 'layouts/main_layout'
-  	});
+	res.render('index', { title: 'loungebyloungé', 'canvases': getCanvases() });
 });
 
 app.get('/sign-in', function(req, res){
@@ -67,6 +65,7 @@ app.get('/play-menu', function(req, res){
 app.get('/play', function(req, res){
 	res.render('game/game');
 });
+
 
 app.use(function(req, res){
 	res.render('errors/404', {
@@ -214,6 +213,17 @@ everyone.now.endGame = function(data) {
 	nowjs.getGroup(data.group).now.setGameEnded();
 };
 
+everyone.now.saveCanvas = function(data) {
+	var base64Data = data.replace(/^data:image\/png;base64,/,"");
+	var dataBuffer = new Buffer(base64Data, 'base64');	
+	
+	var fileName = Math.floor(Math.random() * 9999999) + ".png";
+	
+fs.writeFile("static/gallery/" + fileName, dataBuffer, function(err) {
+	  console.log(err);
+	});
+};
+
 
 
 
@@ -256,6 +266,16 @@ nowjs.on('disconnect', function(){
 //    if (CONFIG.players.length <= 1 && CONFIG.gameStarted) 
 //		endGame();
 });
+
+
+function getCanvases() {
+	var list = fs.readdirSync('static/gallery');
+	
+	if (list.length > 8)
+		list = list.slice(0, 8);
+		
+	return list;
+}
 
 
 
