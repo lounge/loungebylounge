@@ -124,7 +124,7 @@
 
 #content #wait-list ul li.declined {
 	background-color: rgba(255, 0, 0, 0.4);
-    background-image: url('/Images/cancel.png');
+    background-image: url('/images/cancel.png');
     background-position: 98% center;
     background-repeat: no-repeat;
     color: black;
@@ -132,7 +132,7 @@
 
 #content #wait-list ul li.accepted {
 	background-color: rgba(0, 255, 0, 0.4);
-    background-image: url('/Images/check.png');
+    background-image: url('/images/check.png');
     background-position: 98% center;
     background-repeat: no-repeat;
     color: black;
