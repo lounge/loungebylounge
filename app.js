@@ -47,7 +47,7 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-	res.render('index', { title: 'loungebyloungé', 'canvases': getCanvases() });
+	res.render('index', { title: 'loungebyloungé', 'canvases': getGallery() });
 });
 
 app.get('/sign-in', function(req, res){
@@ -55,7 +55,7 @@ app.get('/sign-in', function(req, res){
 });
 
 app.get('/lobby', function(req, res){
-	res.render('lobby/lobby', { 'players': CONFIG.players });
+	res.render('lobby/lobby');
 });
 
 app.get('/play-menu', function(req, res){
@@ -93,7 +93,7 @@ everyone.now.signIn = function() {
 	
 	CONFIG.players.push(user);
 	
-	everyone.now.updatePlayers({ 'players': CONFIG.players, 'gameStarted': CONFIG.gameStarted });
+	everyone.now.updatePlayers({ 'players': CONFIG.players });
 	
 //	if (CONFIG.players.length > 1) {
 //		everyone.now.updatePlayers({ 'players': CONFIG.players, 'gameStarted': CONFIG.gameStarted });
@@ -103,7 +103,17 @@ everyone.now.signIn = function() {
 //	} 
 };
 
-
+everyone.now.getPlayers = function() {
+	
+	var list = [];
+	
+	for (var i in CONFIG.players) {
+		if (CONFIG.players[i].id != this.user.clientId)
+			list.push(CONFIG.players[i]);
+	}
+	
+	this.now.setPlayers(list);
+}
 
 // Lobby Events
 
@@ -258,17 +268,25 @@ everyone.now.clearCanvas = function(data) {
 
 // Disconnect
 
-nowjs.on('disconnect', function(){
-	CONFIG.players.splice(CONFIG.players.indexOf(this.user.clientId), 1);
+nowjs.on('disconnect', function() {
 	
-    //everyone.now.updatePlayers({ 'players': CONFIG.players, 'gameStarted': CONFIG.gameStarted });
+	user = {
+		nick: this.now.name,
+		id: this.user.clientId	
+	};
+	
+	CONFIG.players.splice(CONFIG.players.indexOf(user), 1);
+	
+    everyone.now.updatePlayers({ 'players': CONFIG.players });
     
 //    if (CONFIG.players.length <= 1 && CONFIG.gameStarted) 
 //		endGame();
 });
 
 
-function getCanvases() {
+
+
+function getGallery() {
 	var list = fs.readdirSync('static/gallery');
 	
 	if (list.length > 8)
@@ -276,6 +294,17 @@ function getCanvases() {
 		
 	return list;
 }
+
+function updatePlayers() {
+	console.log('update 1');
+	
+	everyone.now.updatePlayers({ 'players': CONFIG.players });
+	
+	console.log('update 2');
+	
+}
+
+
 
 
 

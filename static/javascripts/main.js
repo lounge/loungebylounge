@@ -25,7 +25,25 @@ Main = (function() {
 		init: function() {
 			
 			now.updatePlayers = function(data) {
-				$('#players-online').text('People online (' + (data.players.length) + ')');
+				
+				var list = [];
+				
+				for (var i in data.players) {
+					if (data.players[i].id != now.core.clientId)
+						list.push(data.players[i]);
+				}
+				
+				if (list.length > 0)
+					$('#players-online').text('People online (' + (data.players.length > 1 ? data.players.length - 1 : data.players.length ) + ')');
+				
+			};
+			
+			now.setPlayers = function(data) {
+				$('#online-list ul li').remove();
+				
+				for (var i in data) {
+					$('#online-list ul').append('<li clientid="' + data[i].id + '">+ ' + data[i].nick + '</li>');
+				}
 			};
 			
 			now.setCurrentGroup = function(data) {
@@ -112,6 +130,7 @@ Main = (function() {
 				   url: "/lobby",
 				   success: function(res){
 				     $('#content').replaceWith(res);
+				     now.getPlayers();
 				   }
 				});
 			});
@@ -119,6 +138,9 @@ Main = (function() {
 			$('#online-list ul li').live('mouseover',function(){
 			    $(this).draggable({ revert: 'invalid' });
 			});
+
+			
+			
 			
 			
 			$('#drop').live('mouseover',function(){
