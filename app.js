@@ -66,6 +66,9 @@ app.get('/play', function(req, res){
 	res.render('game/game');
 });
 
+app.get('/labs/:lab', function(req, res){
+	res.render('labs/' + req.params.lab);
+});
 
 app.use(function(req, res){
 	res.render('errors/404', {
