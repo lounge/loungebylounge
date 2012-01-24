@@ -5,3 +5,7 @@ body {
 canvas {
 	background: #000000;
 }
+
+span {
+	color: #ffffff;
+}

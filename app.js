@@ -19,7 +19,7 @@ var express = require('express')
 
 // Configuration
 
-app.settings.env = 'production';
+app.settings.env = 'development';
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
