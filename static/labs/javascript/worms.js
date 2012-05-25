@@ -1,6 +1,6 @@
 
 var container, canvas, context;
-var WIDTH, HEIGHT;
+var WIDTH, HEIGHT, moveColor, moveTimer;
 				
 var worms, mouseX, mouseY;
 
@@ -19,7 +19,7 @@ var worms, mouseX, mouseY;
 				container.appendChild(canvas);
 
 				context = canvas.getContext("2d");
-				context.fillStyle = "rgb(255, 255, 255)";
+				context.fillStyle = "rgb(0, 0, 0)";
 				context.fillRect (0, 0, WIDTH, HEIGHT);
 
 				worms = new Array();
@@ -35,6 +35,17 @@ var worms, mouseX, mouseY;
 				mouseX = event.clientX;
 				mouseY = event.clientY;
 				
+				
+				clearInterval(moveTimer);
+				
+				moveTimer = setTimeout('setMoveColor()', 50);
+				
+				
+				
+			}
+			
+			function setMoveColor() {
+				moveColor = "rgba(" + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + ",1)";
 			}
 
 			function loop() {
@@ -45,10 +56,17 @@ var worms, mouseX, mouseY;
 				
 					worms.push(new Worm(mouseX, mouseY));
 					
+					
+					
 				}
 
+				// var loopColor;
+				// if (worms.length % 100 === 0) {
+					// loopColor = "rgba(" + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + ",1)";
+				// }
+				
 				context.beginPath();
-				context.strokeStyle = "#000000";
+				//context.strokeStyle = "#ffffff";
 
 				for (var i = 0; i < worms.length; i++) {
 					
@@ -59,6 +77,7 @@ var worms, mouseX, mouseY;
 					rw = worm.rw += Math.random() - .5,
 					x = worm.x += Math.cos(rw) * speed,
 					y = worm.y += Math.sin(rw) * speed;
+					color = worm.color;
 				
 					//var branch = branches[i];
 					worm.life ++;
@@ -70,8 +89,12 @@ var worms, mouseX, mouseY;
 					
 					}
 
+					
 					context.moveTo(worm.x, worm.y);
-					context.arc(x, y, 1, 1, pi2, false);
+					context.arc(x, y, 10, 0, pi2, false);
+					context.strokeStyle = moveColor;
+					context.fillStyle = moveColor;
+					
 
 					worm.rw += Math.random() - 0.5;
 					worm.x += Math.cos(worm.rw);
@@ -80,16 +103,20 @@ var worms, mouseX, mouseY;
 					context.lineTo(worm.x, worm.y);
 					
 				}
+				
+				context.fill();
 
 				context.stroke();
 				context.closePath();
 
-				context.fillStyle = "rgba(255, 255, 255, 0.1)";
+				context.fillStyle = "rgba(0, 0, 0, 0.1)";
 				context.fillRect (0, 0, WIDTH, HEIGHT);
 			}
 
 			var Worm = function(x, y) {
 			
+				this.color = "rgba(" + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + ", 0.4)";
+				//this.color = "rgba(255,255,255,1)";
 				this.life = 0;
 				this.speed = Math.random() + 2;
 				this.x = x;
